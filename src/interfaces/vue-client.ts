@@ -2,6 +2,8 @@
 
 import type { Ref } from 'vue';
 
+import { LoginWithRedirectOptions } from './vue-client-options';
+
 export interface FirstlineVueClient {
   /**
    * The loading state of the SDK, `true` if the SDK is still processing the PKCE flow, `false` if the SDK has finished processing the PKCE flow.
@@ -25,7 +27,7 @@ export interface FirstlineVueClient {
 
   /**
    * ```js
-   * await loginRedirect();
+   * await loginWithRedirect(options);
    * ```
    *
    * Performs a redirect to `/authorize` using the parameters
@@ -34,12 +36,12 @@ export interface FirstlineVueClient {
    *
    * @param options
    */
-  loginRedirect(): Promise<void>;
+  loginWithRedirect(options?: LoginWithRedirectOptions): Promise<void>;
 
   /**
    * Fetches a new access token and returns the response from the /oauth/token endpoint, omitting the refresh token.
    */
-  getAccessTokenSilently(): Promise<string>;
+  getAccessToken(): Promise<string>;
 
   /**
    * ```js

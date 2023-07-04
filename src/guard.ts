@@ -2,20 +2,24 @@ import type { RouteLocation } from 'vue-router';
 import { watchEffectOnceAsync } from './utils';
 import { client as firstlineClient } from './plugin';
 import { FIRSTLINE_TOKEN } from './token';
-import type { FirstlineVueClient } from './interfaces';
+import type { FirstlineVueClient, LoginWithRedirectOptions } from './interfaces';
 import type { App } from 'vue';
 import { unref } from 'vue';
 
 async function createGuardHandler(
   client: FirstlineVueClient,
-  to: RouteLocation
+  to: RouteLocation,
+  redirectLoginOptions?: LoginWithRedirectOptions
 ) {
   const fn = async () => {
     if (unref(client.isAuthenticated)) {
       return true;
     }
 
-    await client.loginRedirect();
+    await client.loginWithRedirect({
+      redirect_uri: to.fullPath,
+      ...redirectLoginOptions
+    });
 
     return false;
   };
@@ -37,6 +41,11 @@ export interface AuthGuardOptions {
    * The vue application
    */
   app?: App;
+
+  /**
+   * Route specific options to use when being redirected to Firstline
+   */
+  redirectLoginOptions?: LoginWithRedirectOptions;
 }
 
 /**
@@ -58,9 +67,9 @@ export function createAuthGuard(
 export function createAuthGuard(
   appOrOptions?: App | AuthGuardOptions
 ): (to: RouteLocation) => Promise<boolean> {
-  const { app } =
+  const { app, redirectLoginOptions } =
     !appOrOptions || 'config' in appOrOptions
-      ? { app: appOrOptions as App }
+      ? { app: appOrOptions as App, redirectLoginOptions: undefined }
       : (appOrOptions as AuthGuardOptions);
 
   return async (to: RouteLocation) => {
@@ -69,7 +78,7 @@ export function createAuthGuard(
       ? (app.config.globalProperties[FIRSTLINE_TOKEN] as FirstlineVueClient)
       : unref(firstlineClient);
 
-    return createGuardHandler(firstline, to);
+    return createGuardHandler(firstline, to, redirectLoginOptions);
   };
 }
 

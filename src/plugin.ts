@@ -1,7 +1,7 @@
 import type { App, Ref } from 'vue';
 import { readonly, ref } from 'vue';
 
-import type { FirstlineVueClient, } from './interfaces';
+import type { FirstlineVueClient, LoginWithRedirectOptions } from './interfaces';
 import { FIRSTLINE_INJECTION_KEY, FIRSTLINE_TOKEN } from './token';
 import { FirstlineClient, FirstlineClientOptions, ExchangeCodeResponse } from '@first-line/firstline-spa-js';
 import { bindPluginMethods } from './utils';
@@ -47,8 +47,8 @@ export class FirstlinePlugin implements FirstlineVueClient {
     this.getTokens().then().catch(e => undefined);
   }
 
-  async loginRedirect() {
-    return this._client.loginRedirect();
+  async loginWithRedirect(options?: LoginWithRedirectOptions) {
+    return this._client.loginRedirect(options);
   }
 
   async logout() {
@@ -67,7 +67,7 @@ export class FirstlinePlugin implements FirstlineVueClient {
     return this.__proxy(() => this.doExchangeOrRefresh());
   }
 
-  async getAccessTokenSilently() {
+  async getAccessToken() {
     const tokens = await this.getTokens();
     return tokens ? tokens.access_token : "";
   }
