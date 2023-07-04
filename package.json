@@ -1,6 +1,6 @@
 {
   "name": "@first-line/firstline-vue",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Firstline SDK for Vue Single Page Applications (SPA)",
   "main": "dist/lib/firstline-vue.cjs.js",
   "types": "dist/typings/index.d.ts",
@@ -75,7 +75,7 @@
     "wait-on": "^6.0.0"
   },
   "dependencies": {
-    "@first-line/firstline-spa-js": "1.0.2",
+    "@first-line/firstline-spa-js": "^1.0.4",
     "vue": "^3.2.41"
   },
   "peerDependencies": {

@@ -1,20 +1,23 @@
 # Firstline Vue
 
+This library enables you to add authentication to your Vue app.
+
 ## Helpful resources
 
-- [Quick setup](https://docs.firstline.sh/quicksetup?tab=vue) - our guide for quickly adding login, logout and user information to a Vue app using Firstline.
-- [Vue sample app](https://github.com/firstline-idp/firstline-vue) - a full-fledged Vue application integrated with Firstline.
+- [Quick setup](https://docs.firstline.sh/quicksetup/vue) - our guide for quickly adding login, logout and user information to a Vue app using Firstline.
+- [Vue sample app](https://github.com/firstline-idp/sample-firstline-vue) - a full-fledged Vue application integrated with Firstline.
 - [Firstline docs](https://docs.firstline.sh) - explore our docs site and learn more about Firstline.
 
 ## Getting started
 
-### Setup Firstline Application & API
-1. Follow the [Quick setup](https://docs.firstline.sh/quicksetup?tab=vue) to configure a Firstline Application.
-2. Add a Firstline API as shown in [Secure API](https://docs.firstline.sh/secure-api?tab=vue).
+### 1. Setup Firstline Application & API
+
+1. Follow the [Quick setup](ttps://docs.firstline.sh/quicksetup/vue) to configure a Firstline Application.
+2. Add a Firstline API as shown in [Secure API](https://docs.firstline.sh/secureapi).
 
 **Important:** Don't forget to configure the Application URIs.
 
-### Installation
+### 2. Installation
 
 Using npm:
 
@@ -28,7 +31,7 @@ Using yarn:
 yarn add @first-line/firstline-vue
 ```
 
-### Configuration
+### 3. Configuration
 
 Add the following code to your Vue project. Replace **DOMAIN**, **API_IDENTIFIER** and **CLIENT_ID** with the settings you configured in the setup step. You can also find them in the Application's and API's "Configure" tab in your dashboard.
 
@@ -51,7 +54,10 @@ app.use(
 app.mount('#app');
 ```
 
-### Add login, logout, isAuthenticated & user
+### 4. Add login & logout to your application
+
+Implement the following component in your frontend and you have a fully functional login/logout.
+
 ```html
 <!-- Component.vue -->
 <template>
@@ -79,7 +85,7 @@ export default {
       isAuthenticated: firstline.isAuthenticated,
       isLoading: firstline.isLoading,
       user: firstline.user,
-      login() { firstline.loginRedirect(); },
+      login() { firstline.loginWithRedirect(); },
       logout() { firstline.logout(); }
     };
   }
@@ -87,7 +93,13 @@ export default {
 </script>
 ```
 
-### Make a secured backend call
+You can call useFirstline() from anywhere in your application to
+- log in
+- log out
+- check if the user is signed in
+- retrieve the logged in user
+
+### 5. Make a secured backend call
 
 Here is sample code on how to make an API request to a secured endpoint.
 
@@ -117,7 +129,7 @@ export default {
       errorMessage,
       posts,
       async loadPosts() {
-        const accessToken = await firstline.getAccessTokenSilently();
+        const accessToken = await firstline.getAccessToken();
         try {
           const response = await fetch("http://localhost:8080/posts", {
             headers: {
@@ -138,4 +150,4 @@ export default {
 
 In this example, we assume that the API endpoint http://localhost:8080/posts exists.
 
-**Important:** The user must be logged in when calling `getAccessTokenSilently()`. Therefore, use `isAuthenticated`.
+**Important:** The user must be logged in when calling `getAccessToken()`. Therefore, use `isAuthenticated`.
